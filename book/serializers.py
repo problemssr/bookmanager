@@ -31,6 +31,65 @@ class 序列化器名字(serializers.Serializer):
 class BookInfoSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
-    pub_data = serializers.DateField()
-    reacount = serializers.IntegerField()
-    pass
+    pub_date = serializers.DateField()
+    readcount = serializers.IntegerField()
+
+
+################定义人物模型对应的序列化器#####################
+
+from book.models import BookInfo
+
+
+class PeopleInfoSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    password = serializers.CharField()
+    description = serializers.CharField()
+    is_delete = serializers.BooleanField()
+
+    book_id=serializers.IntegerField()
+
+    ###对外键进行学习
+    # ①  如果我们定义的序列化器外键字段类型为 IntegerField
+    # 那么,我们定义的序列化器字段名 必须和数据库中的外键字段名一致
+    # book_id=serializers.IntegerField()
+
+    # ② 如果我们期望的外键数据的key就是模型字段的名字,那么 PrimaryKeyRelatedField 就可以获取到关联的模型id值
+    # queryset 在验证数据的时候,我们要告诉系统,在哪里匹配外键数据
+    # book=serializers.PrimaryKeyRelatedField(queryset=BookInfo.objects.all())
+    # 或者
+    # read_only=True 意思就是 我不验证数据了
+    # book=serializers.PrimaryKeyRelatedField(read_only=True)
+
+    # ③ 如果我们期望获取外键关联的 字符串的信息, 这个时候 我们可以使用 StringRelationField
+    # book=serializers.StringRelatedField()
+
+    # ④ 如果我们期望获取, book 所关联的模型的 所有数据,这个时候我们就定义 book=BookInfoSerializer()
+    # book=关联的BookInfo的一个关联对象数据
+    # book=BookInfo.objects.get(id=xxx)
+
+    # book=BookInfoSerializer(instance=book).data
+    # 等号右边的 book 是模型对象
+    # 等号左边的book 是字典数据
+    # book=BookInfoSerializer()
+    """
+    {
+    'id': 1, 'name': '郭靖', 'password': '123456abc', 'description': '降龙十八掌', 'is_delete': False, 
+    'book': OrderedDict([('id', 1), ('name','射雕英雄传'), ('pub_date', '1980-05-01'), ('readcount', 12)])
+    }
+
+    """
+
+
+"""
+
+①book:1                             PrimaryKeyRelationField                                                       
+
+②book_id:1                          IntergerField
+
+③book:射雕英雄传                      StringRelationField
+
+④book: {id:1,name:射雕英雄传,readcount:10}   BookInfoSerializer
+
+
+"""
