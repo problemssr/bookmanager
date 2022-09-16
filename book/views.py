@@ -225,3 +225,42 @@ from book.models import BookInfo
 book = BookInfo.objects.get(id=1)
 s = BookInfoSerializer(book)
 print(s.data)
+
+"""
+序列化器验证数据的第一种形式:
+
+1.  我们定义的数据类型,可以帮助我们 在反序列化(字典转模型)的时候 验证传入的数据的类型
+    例如:
+        DateField 需要满足 YYYY-MM-DD
+        IntegerField 满足整形类型
+
+2.  通过字段的选项来验证数据
+    例如: 
+        CharField(max_length=10,min_length=5)
+        IntegerField(max_value=10,min_value=1)
+        required=True 默认是True
+
+        read_only: 只用于序列化使用. 反序列化的时候 忽略该字段
+        write_only: 只是用于反序列化使用. 序列化的时候 忽略该字段
+"""
+
+# 将字典转换为对象
+from book.serializers import BookInfoSerializer
+
+# 1. 模拟字典数据
+data = {
+    'name': 'django',
+    'pub_date': '2018-1-1',
+    'readcount': 666
+}
+# 2. 创建序列化器,将字典数据给序列化器
+# BookInfoSerializer(instance,data)
+# instance 用于序列化(对象转换为字典)
+# data 用于反序列化(字典转换为对象)
+serializer = BookInfoSerializer(data=data)
+
+# 3. 验证数据
+# 如果我们的数据 正确(满足需求) 返回True
+# 如果我们的数据 不正确(不满足需求) 返回False
+serializer.is_valid(raise_exception=True)
+# 4. 保存,获取对象
