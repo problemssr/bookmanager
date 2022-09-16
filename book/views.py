@@ -218,3 +218,10 @@ from book.models import PeopleInfo
 people = PeopleInfo.objects.get(id=1)
 serializer = serializers.PeopleInfoSerializer(instance=people)
 print(serializer.data)
+
+from book.serializers import BookInfoSerializer
+from book.models import BookInfo
+
+book = BookInfo.objects.get(id=1)
+s = BookInfoSerializer(book)
+print(s.data)

@@ -28,11 +28,32 @@ class 序列化器名字(serializers.Serializer):
 """
 
 
+class PeopleRelatedSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    password = serializers.CharField()
+
+
 class BookInfoSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
     pub_date = serializers.DateField()
     readcount = serializers.IntegerField()
+
+    people = PeopleRelatedSerializer(many=True)
+    """
+    {
+     'id': 1, 'name': '射雕英雄传', 'pub_date': '1980-05-01', 'readcount': 12,
+     'people': [
+                    OrderedDict([('id', 1), ('name', '郭靖'), ('passwor3456abc')]), 
+                    OrderedDict([('id', 2), ('name', '黄蓉'), ('password', '123456abc')]),
+                    OrderedDict([('id', 3), ('name', '黄药师'), ('passwor123456abc')]), 
+                    OrderedDict([('id', 4), ('name', '欧阳锋'), ('password', '123456abc')]), 
+                    OrderedDict([('id', 5), ('name', '梅超风'), ('pas, '123456abc')])
+                ]
+    }
+
+    """
 
 
 ################定义人物模型对应的序列化器#####################
@@ -47,7 +68,7 @@ class PeopleInfoSerializer(serializers.Serializer):
     description = serializers.CharField()
     is_delete = serializers.BooleanField()
 
-    book_id=serializers.IntegerField()
+    book_id = serializers.IntegerField()
 
     ###对外键进行学习
     # ①  如果我们定义的序列化器外键字段类型为 IntegerField
