@@ -114,3 +114,87 @@ class PeopleInfoSerializer(serializers.Serializer):
 
 
 """
+
+from rest_framework import serializers
+from book.models import BookInfo
+
+class BookInfoSerializer(serializers.Serializer):
+
+    id =serializers.IntegerField(read_only=True)
+    name =serializers.CharField(write_only=True,max_length=10,min_length=5)
+    pub_date =serializers.DateField(required=True)
+    readcount =serializers.IntegerField(required=False)
+    commentcount=serializers.IntegerField(required=False)
+
+    #单个字段验证
+    def validate_readcount(self,value):
+
+        # 写 额外的检测代码
+        if value<0:
+            #raise Exception('阅读量不能为负数')
+
+            # rest_framework.exceptions.ValidationError:
+            raise serializers.ValidationError('阅读量不能为负数')
+
+        return value
+
+    # 多个字段验证
+    # attrs = data
+    # def validate(self, attrs):
+    def validate(self, data):
+
+        readcount=data.get('readcount')
+        commentcount=data.get('commentcount')
+
+        # if readcount<0:
+        #     raise serializers.ValidationError('')
+
+        if commentcount>readcount:
+            raise serializers.ValidationError('评论量不能大于阅读量')
+
+        return data
+
+    """
+    如果我们的序列化器是继承自Serialzier
+    当调用序列化器的save方法的时候,会触发调用 序列化器的create方法
+    """
+    def create(self, validated_data):
+        # validated_data  验证没有问题的数据
+        # 如果我们的data 经过我们的层层验证,没有问题,则
+        # validated_data = data
+
+        return BookInfo.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        # instance,         序列化器创建的时候 传递的对象
+        # validated_data    序列化器创建的时候 验证没有问题的数据
+
+        # get(key,default_value)
+        # 如果 get的key是一个None,则使用 默认值
+        instance.name=validated_data.get('name',instance.name)
+        instance.pub_date=validated_data.get('pub_date',instance.pub_date)
+        instance.readcount=validated_data.get('readcount',instance.readcount)
+        instance.commentcount=validated_data.get('commentcount',instance.commentcount)
+        instance.save()  #调用保存方法,数据才会入库
+        return instance
+
+###################################################################
+class BookInfoModelSerializer(serializers.ModelSerializer):
+    # name=serializers.CharField(max_length=10,min_length=5,required=True)
+    class Meta:
+        model=BookInfo          # ModelSerializer 必须设置 model
+        fields='__all__'        # 设置自动生成的字段列表  __all__ 表示所有
+        # fields=['id','name']        # 列表或者元组
+        # exclude=['id','name']                    # 除去列表中的字段,其他的字段都生成
+
+        # 只读字段列表
+        read_only_fields=['id','name','pub_date']
+
+        # 选项设置
+        extra_kwargs = {
+            # '字段名': { '选项名':value, },
+            'name': {
+                'max_length':40,
+                'min_length':10
+            }
+        }

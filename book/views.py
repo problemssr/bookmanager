@@ -264,3 +264,64 @@ serializer = BookInfoSerializer(data=data)
 # 如果我们的数据 不正确(不满足需求) 返回False
 serializer.is_valid(raise_exception=True)
 # 4. 保存,获取对象
+
+
+######################反序列化数据验证##########################
+from book.serializers import BookInfoSerializer
+
+# 1. 模拟字典数据
+data = {
+    'name':'django',
+    'pub_date':'2020-1-1',
+    'readcount':100,
+    'commentcount':10
+}
+# 2. 创建序列化器,将字典数据传递给序列化器
+serializer=BookInfoSerializer(data=data)
+# 3. 验证数据
+serializer.is_valid(raise_exception=True)
+# 4.验证数据没有问题之后,就可以调用保存方法了
+serializer.save()
+
+
+#######################################################################
+from book.serializers import BookInfoSerializer
+from book.models import BookInfo
+
+# 1. 模拟一个对象数据
+book=BookInfo.objects.get(id=1)
+# 2. 模拟一个字典数据
+data={
+    'name':'射雕英雄后传',
+    'pub_date':'2000-1-1',
+    'readcount':999,
+    'commentcount':666
+}
+# 3. 把对象和字典都传递给序列化器的创建
+serializer=BookInfoSerializer(instance=book,data=data)
+
+# 4. 验证数据
+serializer.is_valid(raise_exception=True)
+# 5. 数据的更新操作
+serializer.save()
+# 6.会获取新字典数据
+serializer.data
+
+
+#####################################
+from book.serializers import BookInfoModelSerializer
+
+data={
+    'name':'射雕英雄~~~~',
+    'pub_date':'2000-1-1',
+    'readcount':999,
+    'commentcount':666
+}
+
+serializer=BookInfoModelSerializer(data=data)
+serializer.is_valid(raise_exception=True)
+serializer.save()
+
+
+from book.serializers import BookInfoModelSerializer
+BookInfoModelSerializer()
