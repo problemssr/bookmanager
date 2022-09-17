@@ -15,6 +15,6 @@ urlpatterns = [
     path('thressbooks/', views.BookInfoListCreaetAPIView.as_view()),
     #
     # #视图集
-    # path('viewsetbooks/',views.BookViewSet.as_view({'get':'list'})),
-    # path('viewsetbooks/<pk>/',views.BookViewSet.as_view({'get':'retrieve'})),
+    path('viewsetbooks/', views.BookViewSet.as_view({'get': 'list'})),
+    path('viewsetbooks/<pk>/', views.BookViewSet.as_view({'get': 'retrieve'})),
 ]

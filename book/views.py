@@ -598,3 +598,37 @@ class BookInfoListCreaetAPIView(ListCreateAPIView):
     queryset = BookInfo.objects.all()
     # 序列化器
     serializer_class = BookInfoModelSerializer
+
+
+############################视图集##########################################################
+
+from rest_framework.viewsets import ViewSet
+
+"""
+视图集 继承自 APIView --> APIView 继承自 View
+如果我们想把 增删改查 都放到一个视图集里,原则上还是不行!!!
+为什么???
+因为 一个类视图 的http方法 不能重复
+获取数据 有2个get  get所有数据  get某一个数据
+
+"""
+from rest_framework.viewsets import ViewSet
+from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+from book.serializers import BookInfoModelSerializer
+
+
+class BookViewSet(ViewSet):
+
+    # 获取所有书籍   GET       books/
+    def list(self, request):
+        queryset = BookInfo.objects.all()
+        serializer = BookInfoModelSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    # 获取指定书籍 GET         books/pk/
+    def retrieve(self, request, pk=None):
+        queryset = BookInfo.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = BookInfoModelSerializer(user)
+        return Response(serializer.data)
