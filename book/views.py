@@ -248,77 +248,77 @@ print(s.data)
 from book.serializers import BookInfoSerializer
 
 # 1. 模拟字典数据
-data = {
-    'name': 'django',
-    'pub_date': '2018-1-1',
-    'readcount': 666
-}
+# data = {
+#     'name': 'django',
+#     'pub_date': '2018-1-1',
+#     'readcount': 666
+# }
 # 2. 创建序列化器,将字典数据给序列化器
 # BookInfoSerializer(instance,data)
 # instance 用于序列化(对象转换为字典)
 # data 用于反序列化(字典转换为对象)
-serializer = BookInfoSerializer(data=data)
+# serializer = BookInfoSerializer(data=data)
 
 # 3. 验证数据
 # 如果我们的数据 正确(满足需求) 返回True
 # 如果我们的数据 不正确(不满足需求) 返回False
-serializer.is_valid(raise_exception=True)
+# serializer.is_valid(raise_exception=True)
 # 4. 保存,获取对象
 
 
 ######################反序列化数据验证##########################
-from book.serializers import BookInfoSerializer
-
-# 1. 模拟字典数据
-data = {
-    'name': 'django',
-    'pub_date': '2020-1-1',
-    'readcount': 100,
-    'commentcount': 10
-}
-# 2. 创建序列化器,将字典数据传递给序列化器
-serializer = BookInfoSerializer(data=data)
-# 3. 验证数据
-serializer.is_valid(raise_exception=True)
-# 4.验证数据没有问题之后,就可以调用保存方法了
-serializer.save()
+# from book.serializers import BookInfoSerializer
+#
+# # 1. 模拟字典数据
+# data = {
+#     'name': 'django',
+#     'pub_date': '2020-1-1',
+#     'readcount': 100,
+#     'commentcount': 10
+# }
+# # 2. 创建序列化器,将字典数据传递给序列化器
+# serializer = BookInfoSerializer(data=data)
+# # 3. 验证数据
+# serializer.is_valid(raise_exception=True)
+# # 4.验证数据没有问题之后,就可以调用保存方法了
+# serializer.save()
 
 #######################################################################
 from book.serializers import BookInfoSerializer
 from book.models import BookInfo
 
-# 1. 模拟一个对象数据
-book = BookInfo.objects.get(id=1)
-# 2. 模拟一个字典数据
-data = {
-    'name': '射雕英雄后传',
-    'pub_date': '2000-1-1',
-    'readcount': 999,
-    'commentcount': 666
-}
-# 3. 把对象和字典都传递给序列化器的创建
-serializer = BookInfoSerializer(instance=book, data=data)
-
-# 4. 验证数据
-serializer.is_valid(raise_exception=True)
-# 5. 数据的更新操作
-serializer.save()
-# 6.会获取新字典数据
-serializer.data
+# # 1. 模拟一个对象数据
+# book = BookInfo.objects.get(id=1)
+# # 2. 模拟一个字典数据
+# data = {
+#     'name': '射雕英雄后传',
+#     'pub_date': '2000-1-1',
+#     'readcount': 999,
+#     'commentcount': 666
+# }
+# # 3. 把对象和字典都传递给序列化器的创建
+# serializer = BookInfoSerializer(instance=book, data=data)
+#
+# # 4. 验证数据
+# serializer.is_valid(raise_exception=True)
+# # 5. 数据的更新操作
+# serializer.save()
+# # 6.会获取新字典数据
+# serializer.data
 
 #####################################
-from book.serializers import BookInfoModelSerializer
-
-data = {
-    'name': '射雕英雄~~~~',
-    'pub_date': '2000-1-1',
-    'readcount': 999,
-    'commentcount': 666
-}
-
-serializer = BookInfoModelSerializer(data=data)
-serializer.is_valid(raise_exception=True)
-serializer.save()
+# from book.serializers import BookInfoModelSerializer
+#
+# data = {
+#     'name': '射雕英雄~~~~',
+#     'pub_date': '2000-1-1',
+#     'readcount': 999,
+#     'commentcount': 666
+# }
+#
+# serializer = BookInfoModelSerializer(data=data)
+# serializer.is_valid(raise_exception=True)
+# serializer.save()
 
 from book.serializers import BookInfoModelSerializer
 
@@ -342,27 +342,27 @@ class BookInfoSerializer(serializers.Serializer):
 """
 from book.serializers import BookInfoModelSerializer
 
-# 1. 模拟数据
-data = {
-    'name': '离离原上草',
-    'people': [
-        {
-            'name': '靖妹妹111',
-            'password': '123456abc'
-        },
-        {
-            'name': '靖表哥222',
-            'password': '123456abc'
-        }
-    ]
-}
-
-# 2. 将字典数据传递给序列化器,创建序列化器对象
-serializer = BookInfoModelSerializer(data=data)
-# 3. 验证数据
-serializer.is_valid(raise_exception=True)
-# 4. 保存数据
-serializer.save()
+# # 1. 模拟数据
+# data = {
+#     'name': '离离原上草',
+#     'people': [
+#         {
+#             'name': '靖妹妹111',
+#             'password': '123456abc'
+#         },
+#         {
+#             'name': '靖表哥222',
+#             'password': '123456abc'
+#         }
+#     ]
+# }
+#
+# # 2. 将字典数据传递给序列化器,创建序列化器对象
+# serializer = BookInfoModelSerializer(data=data)
+# # 3. 验证数据
+# serializer.is_valid(raise_exception=True)
+# # 4. 保存数据
+# serializer.save()
 
 ########################apiView#########3
 """
@@ -550,3 +550,24 @@ class BookInfoDetailGenericAPIView(GenericAPIView):
         # 3. 返回响应
         from rest_framework import status
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+##############二级视图与Mixin配合使用###########################################################
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
+
+
+# GenericAPIView 一般和mixin配合使用
+# 列表视图
+class BookInfoGenericMixinAPIView(ListModelMixin,
+                                  CreateModelMixin,
+                                  GenericAPIView):
+    # 查询结果集
+    queryset = BookInfo.objects.all()
+    # 序列化器
+    serializer_class = BookInfoModelSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
