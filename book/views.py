@@ -365,3 +365,83 @@ serializer = BookInfoModelSerializer(data=data)
 serializer.is_valid(raise_exception=True)
 # 4. 保存数据
 serializer.save()
+
+########################apiView#########3
+"""
+通过REST来实现 对于书籍的 增删改查操作
+
+增加一本书籍
+删除一本书籍
+修改一本书籍
+查询一本书籍
+查询所有书籍
+
+###########列表视图#################################    
+查询所有书籍
+GET             books/
+    1.查询所有数据
+    2.将查询结果集进行遍历,转换为字典列表
+    3.返回响应
+
+增加一本书籍
+POST            books/
+    1.接收参数,获取参数
+    2.验证参数
+    3.保存数据
+    4.返回响应
+
+###########详情视图#################################
+删除一本书籍
+DELETE          books/id/
+    1. 接收参数,查询数据
+    2. 操作数据库(删除)
+    3. 返回响应
+
+修改一本书籍
+PUT             books/id/
+    1.查询指定的数据
+    2.接收参数,获取参数
+    3.验证参数
+    4.更新数据
+    5.返回响应
+查询一本书籍
+GET             books/id/
+    1.查询指定数据
+    2.将对象数据转换为字典数据
+    3.返回响应
+
+"""
+from rest_framework.views import APIView
+from book.models import BookInfo
+from book.serializers import BookInfoModelSerializer
+from django.http import HttpRequest  # django
+from django.http import HttpResponse  # django
+
+from rest_framework.request import Request  # drf
+from rest_framework.response import Response  # drf
+
+
+class BookListAPIView(APIView):
+
+    def get(self, request):
+        # django -- request.GET
+        # drf -- request.query_params
+        query_params = request.query_params
+
+        # 1.查询所有数据
+        books = BookInfo.objects.all()
+        # 2.将查询结果集进行遍历,转换为字典列表
+        serializer = BookInfoModelSerializer(instance=books, many=True)
+        # 3.返回响应
+        from rest_framework import status
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        # return JsonResponse({'code':'get','books':serializer.data})
+
+    def post(self, request):
+        # django  --  request.POST, request.body
+
+        # drf -- request.data
+        data = request.data
+
+        return JsonResponse({'code': 'post'})

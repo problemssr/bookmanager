@@ -289,3 +289,6 @@ class BookInfoModelSerializer(serializers.ModelSerializer):
             PeopleInfo.objects.create(book=book, **item)
 
         return book
+
+
+
