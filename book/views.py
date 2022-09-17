@@ -325,3 +325,43 @@ serializer.save()
 
 from book.serializers import BookInfoModelSerializer
 BookInfoModelSerializer()
+
+#################################################
+# 这个data 就类似于 我们在讲解 序列化的时候
+# 定义了一个 PeopleInfoSerializer
+# 定义了一个 BookInfoSerialzier
+# 在BookInfoSerialzier 有一个字段是 peopleinfo=PeopleInfoSerializer(many=True)
+"""
+class PeopleInfoSerializer(serializers.Serializer):
+    id = serializers.IntegerField(label='ID')
+
+class BookInfoSerializer(serializers.Serializer):
+    name = serializers.CharField(label='名称')
+
+    #一本书籍关联多个人物
+    people=PeopleInfoSerializer(many=True)
+
+"""
+from book.serializers import BookInfoModelSerializer
+
+# 1. 模拟数据
+data = {
+    'name': '离离原上草',
+    'people': [
+        {
+            'name': '靖妹妹111',
+            'password': '123456abc'
+        },
+        {
+            'name': '靖表哥222',
+            'password': '123456abc'
+        }
+    ]
+}
+
+# 2. 将字典数据传递给序列化器,创建序列化器对象
+serializer = BookInfoModelSerializer(data=data)
+# 3. 验证数据
+serializer.is_valid(raise_exception=True)
+# 4. 保存数据
+serializer.save()

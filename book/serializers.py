@@ -198,3 +198,94 @@ class BookInfoModelSerializer(serializers.ModelSerializer):
                 'min_length':10
             }
         }
+
+
+from rest_framework import serializers
+from book.models import PeopleInfo, BookInfo
+
+"""
+1. 将对象转换为字典 -- 序列化
+2. 验证我们的字典数据 -- 反序列化的一部分
+3. 能够将我们的字典数据保存 -- 反序列化的一部分
+"""
+"""
+ 'book':1,
+'name': '靖哥哥',
+'password': '123456abc',
+"""
+
+
+class PeopleInfoModelSerializer(serializers.ModelSerializer):
+    # password=serializers.CharField(write_only=True,max_length=20)
+    book_id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = PeopleInfo
+        fields = ['id', 'book_id', 'name', 'password', 'is_delete', 'description']
+        extra_kwargs = {
+            'password': {
+                'write_only': True
+            },
+            'is_delete': {
+                'read_only': True
+            }
+        }
+
+
+class BookInfoModelSerializer(serializers.ModelSerializer):
+    people = PeopleInfoModelSerializer(many=True)
+
+    class Meta:
+        model = BookInfo
+        fields = '__all__'
+
+    """
+    序列化器嵌套序列化器写入数据的时候.默认系统是不支持写入的
+    我们需要自己实现create方法 来实现数据的写入
+
+    validate:
+    data={
+        'name':'离离原上草',
+
+    }
+
+    people 
+    'people':[
+            {
+                'name': '靖妹妹111',
+                'password': '123456abc'
+            },
+            {
+                'name': '靖表哥222',
+                'password': '123456abc'
+            }
+        ]
+
+    写入数据的思想是:  因为 当前 书籍和人物的关系是 1对多  应该先写入 1的模型数据,再写入 多的模型数据
+
+    data.pop('people')  'name':'离离原上草',
+
+    people 再写入 people列表数据
+
+    """
+
+    def create(self, validated_data):
+        # 1. 先把 validated_data 的嵌套数据 分解开
+        people = validated_data.pop('people')
+
+        # validated_data
+        # 2. 写入书籍信息
+        book = BookInfo.objects.create(**validated_data)
+
+        # 3. 对字典列表进行遍历
+        for item in people:
+            """
+            item 
+            {
+                'name': '靖表哥222',
+                'password': '123456abc'
+            }
+            """
+            PeopleInfo.objects.create(book=book, **item)
+
+        return book
