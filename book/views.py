@@ -571,3 +571,12 @@ class BookInfoGenericMixinAPIView(ListModelMixin,
 
     def post(self, request):
         return self.create(request)
+
+##################三级视图#####################################################
+from rest_framework.generics import ListCreateAPIView
+
+class BookInfoListCreaetAPIView(ListCreateAPIView):
+    # 查询结果集
+    queryset = BookInfo.objects.all()
+    # 序列化器
+    serializer_class = BookInfoModelSerializer

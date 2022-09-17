@@ -10,9 +10,9 @@ urlpatterns = [
     path('genericbooks/', views.BookInfoGenericAPIView.as_view()),
     path('genericbooks/<id>/', views.BookInfoDetailGenericAPIView.as_view()),
     # #二级视图 GenericAPIView与mixin配合使用
-    path('mixinbooks/',views.BookInfoGenericMixinAPIView.as_view()),
+    path('mixinbooks/', views.BookInfoGenericMixinAPIView.as_view()),
     # #三级视图
-    # path('thressbooks/',views.BookInfoListCreaetAPIView.as_view()),
+    path('thressbooks/', views.BookInfoListCreaetAPIView.as_view()),
     #
     # #视图集
     # path('viewsetbooks/',views.BookViewSet.as_view({'get':'list'})),
