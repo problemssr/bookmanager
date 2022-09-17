@@ -453,3 +453,100 @@ class BookListAPIView(APIView):
         return Response(serializer.data)
 
         # return JsonResponse({'code':'post'})
+
+
+###############二级视图#################################################################
+from rest_framework.generics import GenericAPIView
+
+"""
+GenericAPIView 比 APIView 扩展了一些属性和方法
+
+
+属性
+    queryset                设置查询结果集
+    serializer_class        设置序列化器
+    lookup_field            设置查询指定数据的关键字参数
+方法
+    get_queryset()          获取查询结果集
+    get_serializer()        获取序列化器实例
+    get_object()            获取到指定的数据
+"""
+
+
+# 列表视图
+class BookInfoGenericAPIView(GenericAPIView):
+    # 查询结果集
+    queryset = BookInfo.objects.all()
+    # 序列化器
+    serializer_class = BookInfoModelSerializer
+
+    def get(self, request):
+        # 1.查询所有数据
+        # books=BookInfo.objects.all()
+        # books=self.queryset
+        books = self.get_queryset()
+
+        # 2.将查询结果集进行遍历,转换为字典列表
+        # serializer=BookInfoModelSerializer(books,many=True)
+        # serializer=self.serializer_class(books,many=True)
+        serializer = self.get_serializer(books, many=True)
+
+        # 3.返回响应
+        return Response(serializer.data)
+
+    def post(self, request):
+        # 1.接收参数,获取参数
+        data = request.data
+        # 2.验证参数
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid()
+        # 3.保存数据
+        serializer.save()
+        # 4.返回响应
+        return Response(serializer.data)
+
+
+# 详情视图
+class BookInfoDetailGenericAPIView(GenericAPIView):
+    # 查询所有数据.因为查询结果集有惰性 以及后续的代码可以采用 self.queryset.filter(id=pk) 属性.
+    # 所以 我们就直接设置 所有查询结果就可以
+    # 查询结果集
+    queryset = BookInfo.objects.all()
+    # 序列化器
+    serializer_class = BookInfoModelSerializer
+
+    # 设置关键字参数的名字
+    lookup_field = 'id'
+
+    def get(self, request, id):
+        # 1.查询指定数据
+        # book=BookInfo.objects.get(id=pk)
+        # book=self.queryset.get(id=pk)
+        # book=self.get_queryset().get(id=pk)
+        book = self.get_object()
+        # 2.将对象数据转换为字典数据
+        serializer = self.get_serializer(instance=book)
+        # 3.返回响应
+        return Response(serializer.data)
+
+    def put(self, request, id):
+        # 1.查询指定的数据
+        book = self.get_object()
+        # 2.接收参数,获取参数
+        data = request.data
+        # 3.验证参数
+        serializer = self.get_serializer(instance=book, data=data)
+        serializer.is_valid(raise_exception=True)
+        # 4.更新数据
+        serializer.save()
+        # 5.返回响应
+        return Response(serializer.data)
+
+    def delete(self, request, id):
+        # 1. 接收参数,查询数据
+        book = self.get_object()
+        # 2. 操作数据库(删除)
+        book.delete()
+        # 3. 返回响应
+        from rest_framework import status
+        return Response(status=status.HTTP_204_NO_CONTENT)
