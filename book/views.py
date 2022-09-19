@@ -602,7 +602,7 @@ class BookInfoListCreaetAPIView(ListCreateAPIView):
 
 ############################视图集##########################################################
 
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ViewSet, ModelViewSet
 
 """
 视图集 继承自 APIView --> APIView 继承自 View
@@ -632,3 +632,60 @@ class BookViewSet(ViewSet):
         user = get_object_or_404(queryset, pk=pk)
         serializer = BookInfoModelSerializer(user)
         return Response(serializer.data)
+
+
+#############################################################################
+from rest_framework.viewsets import ModelViewSet
+
+
+# ModelViewSet 基本使用
+class BookInfoModelViewSet(ModelViewSet):
+    queryset = BookInfo.objects.all()
+
+    serializer_class = BookInfoModelSerializer
+
+
+##########################高级功能################################################
+"""
+1. 概念
+2. 配置
+3. 效果
+"""
+
+# 定义一个 视图集
+from book.models import PeopleInfo
+from book.serializers import PeopleInfoModelSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated
+
+# 系统为我们提供了2个分页类
+from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
+from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
+
+
+class PageNum(PageNumberPagination):
+    # 开启分页的开关
+    page_size = 5
+    # 设置查询字符串的key 相当于 开关.只有设置了这个值.一页多少条记录才生效
+    page_size_query_param = 'ps'
+
+    # 一页最多多少条记录
+    max_page_size = 20
+
+
+class PeopleInfoModelViewSet(ModelViewSet):
+    # 给视图 单独设置权限
+    # permission_classes = [AllowAny]
+
+    # 单独设置分页类
+    pagination_class = PageNum
+
+    # queryset = PeopleInfo.objects.all()
+    # 或者
+    def get_queryset(self):
+        return PeopleInfo.objects.all()
+
+    # serializer_class = PeopleInfoModelSerializer
+    # 或者
+    def get_serializer_class(self):
+        return PeopleInfoModelSerializer

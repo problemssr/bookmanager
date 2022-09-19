@@ -292,3 +292,18 @@ class BookInfoModelSerializer(serializers.ModelSerializer):
 
 
 
+# from rest_framework import serializers
+# from book.views import BookInfo
+#
+# class BookInfoModelSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model=BookInfo
+#         fields='__all__'
+#
+# from book.models import PeopleInfo
+# class PeopleInfoModelSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model=PeopleInfo
+#         fields='__all__'
