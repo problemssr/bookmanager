@@ -130,5 +130,8 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': [
     #     'rest_framework.permissions.IsAuthenticated',
     # ],
-
-}
+    # # 认证要和权限配合使用. 不和权限配合使用,没有任何效果
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework.authentication.SessionAuthentication',  # session认证
+    # ),
+   }
