@@ -118,3 +118,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#   drf 的配置key REST_FRAMEWORK
+# from rest_framework.permissions import IsAuthenticatedOrReadOnly
+# from rest_framework.authentication import TokenAuthentication
+# 我们在 setting配置文件中的设置,所有的 drf视图类 都遵守
+REST_FRAMEWORK = {
+    # 权限
+    # IsAuthenticated 登录用户
+    # IsAuthenticatedOrReadOnly   未登录用户可以查看,不能 增删改
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
+
+}
