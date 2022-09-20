@@ -134,4 +134,7 @@ REST_FRAMEWORK = {
     # 'DEFAULT_AUTHENTICATION_CLASSES': (
     #     'rest_framework.authentication.SessionAuthentication',  # session认证
     # ),
-   }
+    # # 分页类
+    # # 只有GenericAPIView及其子类 才能使用分页类
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
+}
